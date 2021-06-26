@@ -1,6 +1,6 @@
 import { AES, enc } from "crypto-js"
 
-class EmailProvider{
+class EnsureEmailSecurity{
   constructor(){}
 
   encrypt(email:string){
@@ -13,4 +13,4 @@ class EmailProvider{
   }
 }
 
-export { EmailProvider }
+export { EnsureEmailSecurity }

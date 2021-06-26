@@ -2,7 +2,7 @@ import { getCustomRepository } from "typeorm"
 import { CustomException } from "../exceptions/CustomException";
 import { UserRepositories } from "../repositories/UsersRepositories"
 import { hash } from "bcryptjs"
-import { EmailProvider } from "../providers/emailProvider";
+import { EnsureEmailSecurity } from "../providers/email/ensureEmailSecurity";
 
 interface IUserRequest {
   name: string;
@@ -14,7 +14,7 @@ interface IUserRequest {
 class CreateUserService {
   async execute({ name, email, admin = false, password }: IUserRequest) {
     const usersRepository = getCustomRepository(UserRepositories);
-    const emailProvider= new EmailProvider()
+    const emailProvider= new EnsureEmailSecurity()
 
     if (!email)
       throw new CustomException({status:422, message:"Invalid email!"})

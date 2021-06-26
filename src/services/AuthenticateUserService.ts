@@ -1,6 +1,6 @@
 import { getCustomRepository } from "typeorm"
 import { CustomException } from "../exceptions/CustomException"
-import { EmailProvider } from "../providers/emailProvider"
+import { EnsureEmailSecurity } from "../providers/email/ensureEmailSecurity"
 import { UserRepositories } from "../repositories/UsersRepositories"
 import { compare } from 'bcryptjs'
 import {sign} from 'jsonwebtoken'
@@ -14,7 +14,7 @@ interface IAuthenticateRequest{
 class AuthenticateUserService{
   async execute({email, password}: IAuthenticateRequest){
     const userRepositories=getCustomRepository(UserRepositories)
-  const emailProvider= new EmailProvider()
+  const emailProvider= new EnsureEmailSecurity()
 
     const allUsers = await userRepositories.find()
 
