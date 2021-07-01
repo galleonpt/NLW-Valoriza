@@ -18,11 +18,11 @@
 
 - Registration of compliments
 
-  [ ] The user must be authenticated in the application
+  [ x ] The user must be authenticated in the application
 
-  [ ] Users are not allowed to register a compliment for themselves
+  [ x ] Users are not allowed to register a compliment for themselves
 
-  [ ] It is not allowed to register compliments for invalid users
+  [ x ] It is not allowed to register compliments for invalid users
 
 ## Improvements
 
@@ -31,3 +31,5 @@
 [ x ] Tags have the 1st letter capitalized
 
 [ x ] Custom errors
+
+[ x ] List users by tag
