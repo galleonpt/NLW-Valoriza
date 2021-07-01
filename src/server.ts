@@ -2,7 +2,7 @@ import express, { Request, Response, NextFunction } from 'express'
 import 'express-async-errors'
 import "reflect-metadata"
 import './database'
-import { CustomException } from './exceptions/CustomException'
+import { CustomException } from './errors/CustomException'
 import { routes } from './routes'
 import 'dotenv/config'
 import cors from "cors"

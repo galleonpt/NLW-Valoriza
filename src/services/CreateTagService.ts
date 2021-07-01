@@ -1,5 +1,5 @@
 import { getCustomRepository } from "typeorm"
-import { CustomException } from "../exceptions/CustomException"
+import { CustomException } from "../errors/CustomException"
 import { TagsRepositories } from "../repositories/TagsRepositories"
 
 class CreateTagService{

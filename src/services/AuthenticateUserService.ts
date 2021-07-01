@@ -1,5 +1,5 @@
 import { getCustomRepository } from "typeorm"
-import { CustomException } from "../exceptions/CustomException"
+import { CustomException } from "../errors/CustomException"
 import { EnsureEmailSecurity } from "../providers/email/ensureEmailSecurity"
 import { UserRepositories } from "../repositories/UsersRepositories"
 import { compare } from 'bcryptjs'
