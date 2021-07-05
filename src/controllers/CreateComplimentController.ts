@@ -16,7 +16,7 @@ class CreateComplimentController{
       user_sender:user_id
     })
 
-    response.json(compliment)
+    response.status(201).json(compliment)
   }
 }
 

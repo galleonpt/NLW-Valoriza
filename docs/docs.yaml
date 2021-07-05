@@ -1,0 +1,425 @@
+openapi: 3.0.0
+
+info:
+  version: 1.0.0
+  title: "NLW Valoriza"
+  
+
+servers:
+  - url: 'http://localhost:3333'
+ 
+security:
+  - BearerAuth: []
+ 
+paths:
+  /login:
+    post:
+      summary: "Login route"
+      description: "Route responsible for authenticate an user"
+      security: []
+      tags: 
+        - "Authentication"
+      requestBody:
+        description: "User data to login"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginData"
+      responses:
+        "200":
+          description: "Success"
+          content:
+            text:
+              schema:
+                type: string
+        "400":
+          description: "Invalid credentials"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomException"
+         
+  /register:
+    post:
+      summary: "Register route"
+      description: "Route responsible for create an user"
+      security: []
+      tags:
+        - "Authentication"
+      requestBody:
+        description: "User data to register"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterData"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterResponse"
+        "409":
+           description: "User already exists"
+           content: 
+             application/json:
+               schema:
+                 $ref: "#/components/schemas/CustomException"
+        "422":
+          description: "Invalid email"
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomException"
+
+  /compliments:
+    post:
+      summary: "Create a compliment route"
+      description: "Route responsible for create a compliment."
+      tags: 
+        - "Compliments"
+      requestBody:
+        description: "Compliment data"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ComplimentData"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ComplimentResponse"
+        "400":
+          description: "Incorrect user receiver. The logged user is trying to create a compliment to himself"
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomException"
+        "404":
+           description: "User receiver doesn't exists"
+           content: 
+             application/json:
+               schema:
+                 $ref: "#/components/schemas/CustomException"
+
+  /users:
+    get:
+      summary: "List users"
+      description: "Route responsible for list all users registered."
+      tags:
+        - "Users"
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListUsers"
+      
+  /users/compliments/send:
+    get:
+      summary: "List compliments sent"
+      description: "Route responsible for list all compliments that the logged user sent to other users."
+      tags:
+        - "Users"
+      responses:
+        "200":
+          description: "Success"
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListUsersComplimentsSendReceived"
+    
+  /users/compliments/receive:
+    get:
+      summary: "List compliments received"
+      description: "Route responsible for list all compliments that the logged user received from other users."
+      tags:
+        - "Users"
+      responses:
+        "200":
+          description: "Success"
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListUsersComplimentsSendReceived"    
+    
+  /tags:
+    post:
+      summary: "Create a tag"
+      description: "Route responsible for create a tag. Only admins are allowed"
+      tags: 
+        - "Tags"
+      requestBody:
+        description: "Tag data"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                name:
+                  type: "string"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ComplimentResponse"
+        "409":
+          description: "Tag already exists"
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomException"
+        "422":
+           description: "Invalid name. Property __*name*__ required"
+           content: 
+             application/json:
+               schema:
+                 $ref: "#/components/schemas/CreateTagResponse"
+                 
+    get: 
+      summary: "List all tags available"
+      description: "Route responsible for list all tags available."
+      tags:
+        - "Tags"
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListTags"
+ 
+  /tags/users: 
+    get:
+      summary: "List users by tag"
+      description: "Route responsible for list all users that receive a compliment with a specific tag."
+      tags:
+        - "Tags"
+      requestBody:
+        description: "Tag id"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                tag_id:
+                  type: "string"
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListUsersByTag"
+        "422":
+          description: "Invalid tag"
+          content: 
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomException"
+    
+components:
+  schemas:
+    LoginData:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+        password:
+          type: "string"
+    
+    RegisterData:
+      type: "object"
+      properties:
+        email:
+          type: "string"
+        name:
+          type: "string"
+        password:
+          type: "string"
+        admin:
+          type: "boolean"
+
+    RegisterResponse:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        name:
+          type: "string"
+        password:
+          type: "string"
+        email:
+          type: "string"
+        admin:
+          type: "boolean"
+        created_at:
+          type: "string"
+        updated_at:
+          type: "string"
+    
+    CustomException:
+      type: "object"
+      properties:
+        status:
+          type: "number"
+        message:
+          type: "string"
+    
+    ComplimentData:
+      type: "object"
+      properties:
+        tag_id: 
+          type: "string"
+        user_receiver:
+          type: "string"
+        message: 
+          type: "string"
+          
+    ComplimentResponse:
+      type: "object"
+      properties:
+        id: 
+          type: "string"
+        user_receiver:
+          type: "string"
+        user_sender: 
+          type: "string"
+        tag_id: 
+          type: "string"
+        message: 
+          type: "string"
+        created_at: 
+          type: "string"
+          
+    UserData:
+      type: "object"
+      properties:
+        id: 
+          type: "string"
+        name:
+          type: "string"
+        email: 
+          type: "string"
+        admin: 
+          type: "boolean"
+        updated_at: 
+          type: "string"
+        created_at: 
+          type: "string"
+    
+    ListUsers:
+      type: "array"
+      items:
+        type: "object"
+        $ref: "#/components/schemas/UserData"
+     
+    ListUsersComplimentsSendReceived:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        user_sender:
+          type: "string"
+        user_receiver:
+          type: "string"
+        tag_id:
+          type: "string"
+        message:
+          type: "boolean"
+        created_at:
+          type: "string"
+        userSender:
+          type: "object"
+          properties:
+             id: 
+               type: "string"
+             name:
+               type: "string"
+             email: 
+               type: "string"
+             admin: 
+               type: "boolean"
+             updated_at: 
+               type: "string"
+             created_at: 
+               type: "string"
+        userReceiver:
+          type: "object"
+          properties:
+            id: 
+              type: "string"
+            name:
+              type: "string"
+            email: 
+              type: "string"
+            admin: 
+              type: "boolean"
+            updated_at: 
+              type: "string"
+            created_at: 
+              type: "string"
+        tag:
+          type: "object"
+          properties:
+            id: 
+              type: "string"
+            name:
+              type: "string"
+            updated_at: 
+              type: "string"
+            created_at: 
+              type: "string"
+           
+    CreateTagResponse:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        name:
+          type: "string"
+        created_at:
+          type: "string"
+        updated_at:
+          type: "string"
+        
+    ListTags:
+      type: "object"
+      properties:
+        id: 
+          type: "string"
+        name:
+          type: "string"
+        updated_at: 
+          type: "string"
+        created_at: 
+          type: "string"
+        hashTag:
+          type: "string"
+        
+    ListUsersByTag:
+      type: "object"
+      properties:
+         tagID: 
+           type: "string"
+         message:
+           type: "string"
+         userReceiverId: 
+           type: "string"
+         userReceiverName: 
+           type: "string"
+        
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
