@@ -9,7 +9,6 @@ class EnsureEmailSecurity{
   
   decrypt(encryptedEmail:string){
     return AES.decrypt(encryptedEmail, process.env.ENCRYPT_TOKEN).toString(enc.Utf8)
-
   }
 }
 
