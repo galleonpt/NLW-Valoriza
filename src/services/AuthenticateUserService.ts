@@ -14,7 +14,10 @@ interface IAuthenticateRequest{
 class AuthenticateUserService{
   async execute({email, password}: IAuthenticateRequest){
     const userRepositories=getCustomRepository(UserRepositories)
-  const emailProvider= new EnsureEmailSecurity()
+    const emailProvider= new EnsureEmailSecurity()
+
+    if(!email||!password)
+      throw new CustomException({status: 422, message: "Invalid credentials!"})
 
     const allUsers = await userRepositories.find()
 
