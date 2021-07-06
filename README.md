@@ -5,7 +5,7 @@
 
 # 📌 Description
 
-"NLW Valoriza" is a system that allow users to git compliments to others by using tags.
+"NLW Valoriza" is a system that allow users to give compliments to others by using tags.
 
 ---
 
